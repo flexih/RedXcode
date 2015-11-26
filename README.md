@@ -1,15 +1,18 @@
 RedXcode
 ========
 
-When Xcode is being ran in a debugger, make it obvious that it's in dev mode.
+~~When Xcode is being ran in a debugger, make it obvious that it's in dev mode.~~
+
+When Xcode is building, make it obvious that it's under build.
 
 ![Screenshot of plugin](https://raw.githubusercontent.com/orta/RedXcode/master/web/screenshot.png)
 ![Screenshot of dock icon](https://raw.githubusercontent.com/orta/RedXcode/master/web/screenshot2.png)
 
 #### Features
 
-* Hue shifts the app icon when running Xcode in a debugger
-* Adds the icon to the top right corner in Xcode 6.
+* ~~Hue shifts the app icon when running Xcode in a debugger~~
+* ~~Adds the icon to the top right corner in Xcode 6~~.
+* Hue shifts the app icon when building
 * Hue shift value can be changed by `defaults write com.apple.dt.Xcode ORHueShiftKey [number]`
 
 #### Installation
