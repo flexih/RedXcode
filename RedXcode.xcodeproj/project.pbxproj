@@ -14,7 +14,6 @@
 		60D7E428197CF3080026E73B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60D7E427197CF3080026E73B /* Foundation.framework */; };
 		60D7E42E197CF3080026E73B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60D7E42C197CF3080026E73B /* InfoPlist.strings */; };
 		60D7E431197CF3080026E73B /* RedXcode.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D7E430197CF3080026E73B /* RedXcode.m */; };
-		60D7E43A197CF3CE0026E73B /* ORDebuggerCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D7E439197CF3CE0026E73B /* ORDebuggerCheck.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +29,6 @@
 		60D7E42F197CF3080026E73B /* RedXcode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RedXcode.h; sourceTree = "<group>"; };
 		60D7E430197CF3080026E73B /* RedXcode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RedXcode.m; sourceTree = "<group>"; };
 		60D7E432197CF3080026E73B /* RedXcode-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RedXcode-Prefix.pch"; sourceTree = "<group>"; };
-		60D7E438197CF3CE0026E73B /* ORDebuggerCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORDebuggerCheck.h; sourceTree = "<group>"; };
-		60D7E439197CF3CE0026E73B /* ORDebuggerCheck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORDebuggerCheck.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,8 +75,6 @@
 			children = (
 				60D7E42F197CF3080026E73B /* RedXcode.h */,
 				60D7E430197CF3080026E73B /* RedXcode.m */,
-				60D7E438197CF3CE0026E73B /* ORDebuggerCheck.h */,
-				60D7E439197CF3CE0026E73B /* ORDebuggerCheck.m */,
 				60071F861AE7F2D2000ED7DB /* ORRedXcodePatternBackgroundView.h */,
 				60071F871AE7F2D2000ED7DB /* ORRedXcodePatternBackgroundView.m */,
 				60D7E42A197CF3080026E73B /* Supporting Files */,
@@ -125,7 +120,7 @@
 		60D7E41A197CF3080026E73B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Orta Therox";
 			};
 			buildConfigurationList = 60D7E41D197CF3080026E73B /* Build configuration list for PBXProject "RedXcode" */;
@@ -165,7 +160,6 @@
 			files = (
 				60D7E431197CF3080026E73B /* RedXcode.m in Sources */,
 				60071F881AE7F2D2000ED7DB /* ORRedXcodePatternBackgroundView.m in Sources */,
-				60D7E43A197CF3CE0026E73B /* ORDebuggerCheck.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +194,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -263,6 +258,7 @@
 				GCC_PREFIX_HEADER = "RedXcode/RedXcode-Prefix.pch";
 				INFOPLIST_FILE = "RedXcode/RedXcode-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.orta.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xcplugin;
 			};
@@ -278,6 +274,7 @@
 				GCC_PREFIX_HEADER = "RedXcode/RedXcode-Prefix.pch";
 				INFOPLIST_FILE = "RedXcode/RedXcode-Info.plist";
 				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.orta.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xcplugin;
 			};

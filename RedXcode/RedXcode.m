@@ -1,5 +1,4 @@
 #import "RedXcode.h"
-#import "ORDebuggerCheck.h"
 #import "ORRedXcodePatternBackgroundView.h"
 
 @import QuartzCore;
@@ -16,6 +15,12 @@ static NSString *ORHueShiftKey = @"ORHueShiftKey";
 // https://bugs.webkit.org/attachment.cgi?id=234725&action=prettypatch
 @interface NSView (AppKitDetails)
 - (void)_addKnownSubview:(NSView *)subview;
+@end
+
+@interface RedXcode()
+
+@property (nonatomic, copy) NSImage *appIcon;
+
 @end
 
 @implementation RedXcode
@@ -36,21 +41,46 @@ static NSString *ORHueShiftKey = @"ORHueShiftKey";
 {
     self = [super init];
     if (!self) return nil;
-    if (!self.isRunningInGDB) return nil;
 
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{
           ORHueShiftKey: @(ORHueShiftAmount)
     }];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeWindows) name:NSWindowDidBecomeKeyNotification object:nil];
-
-    NSApplication *app = [NSApplication sharedApplication];
-    NSImage *appIcon = [app applicationIconImage];
-    [app setApplicationIconImage:[self coloredImage:appIcon]];
-
-    [self changeWindows];
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidFinishLaunching:)
+                                                 name:NSApplicationDidFinishLaunchingNotification
+                                               object:nil];
     return self;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:NSApplicationDidFinishLaunchingNotification
+                                                  object:nil];
+    self.appIcon = [NSApplication sharedApplication].applicationIconImage;
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(willBuild:)
+                                                 name:@"IDEBuildOperationWillStartNotification"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didBuild:)
+                                                 name:@"IDEBuildOperationDidStopNotification"
+                                               object:nil];
+}
+
+- (void)willBuild:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self changeWindows];
+        [NSApplication sharedApplication].applicationIconImage = [self coloredImage:self.appIcon];
+    });
+}
+
+- (void)didBuild:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self restoreWindows];
+        [NSApplication sharedApplication].applicationIconImage = self.appIcon;
+    });
 }
 
 - (void)changeWindows
@@ -58,36 +88,29 @@ static NSString *ORHueShiftKey = @"ORHueShiftKey";
     @try {
         NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
         for (NSWindow *window in [workspaceWindowControllers valueForKey:@"window"]) {
-            [self setupBannerForWindow:window];
+            [self setupStripeViewForWindow:window];
         }
     }
     @catch (NSException *exception) { }
 }
 
-static CGFloat ORRedXcodeBannerTag = 2323;
+- (void)restoreWindows
+{
+    @try {
+        NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
+        for (NSWindow *window in [workspaceWindowControllers valueForKey:@"window"]) {
+            [self restoreStripeViewForWindow:window];
+        }
+    }
+    @catch (NSException *exception) { }
+}
+
 static CGFloat ORRedXcodeStripeTag = 2324;
 
-- (void)setupBannerForWindow:(NSWindow *)window
+- (void)setupStripeViewForWindow:(NSWindow *)window
 {
     if ([window isKindOfClass:NSClassFromString(@"IDEWorkspaceWindow")]) {
         NSView *windowFrameView = [[window contentView] superview];
-        NSImageView *bannerView = [windowFrameView viewWithTag:ORRedXcodeBannerTag];
-
-        if (!bannerView) {
-            CGFloat y = CGRectGetHeight(windowFrameView.bounds) - 22;
-            CGFloat x = CGRectGetWidth(windowFrameView.bounds) - 22;
-
-            bannerView = [[NSImageView alloc] initWithFrame:CGRectMake(x, y, 20, 20)];
-            bannerView.image = [NSApplication sharedApplication].applicationIconImage;
-            bannerView.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
-            bannerView.tag = ORRedXcodeBannerTag;
-
-            if ([windowFrameView respondsToSelector:@selector(_addKnownSubview:)]) {
-                [(id)windowFrameView _addKnownSubview:bannerView];
-            } else {
-                [windowFrameView addSubview:bannerView];
-            }
-        }
 
         // Idea politely stolen from @zats: https://github.com/zats/BetaWarpaint
         
@@ -119,6 +142,16 @@ static CGFloat ORRedXcodeStripeTag = 2324;
     }
 }
 
+- (void)restoreStripeViewForWindow:(NSWindow *)window {
+    if ([window isKindOfClass:NSClassFromString(@"IDEWorkspaceWindow")]) {
+        NSView *windowFrameView = [[window contentView] superview];
+        NSImageView *stripeView = [windowFrameView viewWithTag:ORRedXcodeStripeTag];
+        if (stripeView) {
+            [stripeView removeFromSuperview];
+        }
+    }
+}
+
 - (NSImage *)coloredImage:(NSImage *)image
 {
     CIImage *inputImage = [[CIImage alloc] initWithData:[image TIFFRepresentation]];
@@ -135,11 +168,6 @@ static CGFloat ORRedXcodeStripeTag = 2324;
     [resultImage addRepresentation:rep];
 
     return resultImage;
-}
-
-- (BOOL)isRunningInGDB
-{
-    return [ORDebuggerCheck isInDebugger];
 }
 
 - (void)dealloc

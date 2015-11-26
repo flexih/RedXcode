@@ -2,6 +2,6 @@
 
 @interface ORRedXcodePatternBackgroundView : NSView
 
-@property (nonatomic, assign) NSInteger tag;
+@property (atomic, assign) NSInteger tag;
 
 @end

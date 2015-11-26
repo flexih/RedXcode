@@ -9,7 +9,7 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>io.github.orta.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -22,8 +22,6 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>XC4Compatible</key>
-	<true/>
 	<key>DVTPlugInCompatibilityUUIDs</key>
 	<array>
 		<string>FEC992CC-CA4A-4CFD-8881-77300FCB848A</string>
@@ -44,6 +42,8 @@
 		<string>CC0D0F4F-05B3-431A-8F33-F84AFCB2C651</string>
 		<string>7265231C-39B4-402C-89E1-16167C4CC990</string>
 	</array>
+	<key>XC4Compatible</key>
+	<true/>
 	<key>XCGCReady</key>
 	<true/>
 	<key>XCPluginHasUI</key>
